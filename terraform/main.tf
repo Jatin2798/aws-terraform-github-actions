@@ -1,8 +1,30 @@
+# terraform/main.tf
+
+# Providing inbound and outbound rules for HTTP traffic
+resource "aws_security_group" "allow_http" {
+  name        = "allow_http"
+  description = "Allow HTTP traffic"
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# EC2 instance resource definition
 resource "aws_instance" "web" {
   ami           = "ami-05576a079321f21f8"  # Update with the correct AMI ID for your region
   instance_type = "t2.micro"
-  key_name      = "webserverjenkinsKP"  # Make sure this matches your actual key pair name
+  key_name      = "webserverjenkinsKP"  # Replace with your own EC2 key pair name
 
+  # Referencing the security group defined above
   security_groups = [aws_security_group.allow_http.name]
 
   tags = {
