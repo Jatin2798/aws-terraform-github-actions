@@ -31,15 +31,15 @@ jobs:
 
       # Step 4: Initialize Terraform
       - name: Initialize Terraform
-        run: terraform init  # Assuming terraform files are in the root directory
+        run: terraform init terraform/  # Specify the path to the terraform folder
 
       # Step 5: Run Terraform Plan
       - name: Run Terraform Plan
-        run: terraform plan
+        run: terraform plan terraform/  # Specify the path to the terraform folder
 
       # Step 6: Run Terraform Apply
       - name: Run Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve terraform/  # Specify the path to the terraform folder
 
       # Step 7: Output EC2 Public IP
       - name: Output EC2 Public IP
