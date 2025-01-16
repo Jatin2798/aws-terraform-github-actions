@@ -1,49 +1,47 @@
-name: Terraform EC2 Provisioning
+# Providing inbound and outbound rules for HTTP traffic
+resource "aws_security_group" "allow_http" {
+  name        = "allow_http"
+  description = "Allow HTTP traffic"
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-jobs:
-  terraform:
-    runs-on: ubuntu-latest
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  tags = {
+    Name = "allow_http"
+  }
+}
 
-      # Step 2: Set up AWS credentials
-      - name: Set up AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1'  # Set the AWS region directly here
+resource "aws_instance" "web" {
+  ami           = "ami-05576a079321f21f8"
+  instance_type = "t2.micro"
+  key_name      = "webserverjenkinsKP"
 
-      # Step 3: Install Terraform
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 'latest'  # Install the latest version of Terraform
+  security_groups = [aws_security_group.allow_http.name]
 
-      # Step 4: Initialize Terraform
-      - name: Initialize Terraform
-        run: terraform init terraform/  # Specify the path to the terraform folder
+  tags = {
+    Name = "Terraform-EC2"
+  }
 
-      # Step 5: Run Terraform Plan
-      - name: Run Terraform Plan
-        run: terraform plan terraform/  # Specify the path to the terraform folder
+  user_data = <<-EOF
+  #!/bin/bash
+  echo "<html><body><h1>My Terraform Web App</h1></body></html>" > /var/www/html/index.html
+  sudo systemctl start httpd
+  sudo systemctl enable httpd
+  EOF
+}
 
-      # Step 6: Run Terraform Apply
-      - name: Run Terraform Apply
-        run: terraform apply -auto-approve terraform/  # Specify the path to the terraform folder
-
-      # Step 7: Output EC2 Public IP
-      - name: Output EC2 Public IP
-        run: |
-          PUBLIC_IP=$(terraform output -raw ec2_public_ip)  # Correct output name
-          echo "EC2 Public IP: $PUBLIC_IP"
+output "ec2_public_ip" {
+  value = aws_instance.web.public_ip
+}
 
