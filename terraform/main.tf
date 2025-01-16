@@ -22,7 +22,7 @@ resource "aws_security_group" "allow_http" {
 resource "aws_instance" "web" {
   ami           = "ami-05576a079321f21f8"  # Update with the correct AMI ID for your region
   instance_type = "t2.micro"
-  key_name      = "Jatinkeypair"  # Replace with your own EC2 key pair name
+  key_name      = "webserverjenkinsKP"  # Replace with your own EC2 key pair name
 
   security_groups = [aws_security_group.allow_http.name]
 
