@@ -21,7 +21,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'us-east-1'  # Set the AWS region directly here (us-east-1)
+          aws-region: 'us-east-1'  # Set the AWS region directly here
 
       # Step 3: Install Terraform
       - name: Set up Terraform
@@ -29,22 +29,22 @@ jobs:
         with:
           terraform_version: 'latest'  # Install the latest version of Terraform
 
-      # Step 4: Initialize Terraform
+      # Step 4: Initialize Terraform (specify the terraform directory)
       - name: Initialize Terraform
-        run: terraform init
+        run: terraform init ./terraform  # Specify the path to the terraform directory
 
       # Step 5: Run Terraform Plan
       - name: Run Terraform Plan
-        run: terraform plan
+        run: terraform plan ./terraform  # Specify the path to the terraform directory
 
       # Step 6: Run Terraform Apply
       - name: Run Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve ./terraform  # Specify the path to the terraform directory
 
       # Step 7: Output EC2 Public IP
       - name: Output EC2 Public IP
         run: |
-          PUBLIC_IP=$(terraform output -raw instance_public_ip)
+          PUBLIC_IP=$(terraform output -raw ec2_public_ip)
           echo "EC2 Public IP: $PUBLIC_IP"
 
 
