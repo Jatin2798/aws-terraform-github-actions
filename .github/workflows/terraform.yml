@@ -29,22 +29,22 @@ jobs:
         with:
           terraform_version: 'latest'  # Install the latest version of Terraform
 
-      # Step 4: Initialize Terraform (specify the terraform directory)
+      # Step 4: Initialize Terraform (using -chdir)
       - name: Initialize Terraform
-        run: terraform init ./terraform  # Specify the path to the terraform directory
+        run: terraform -chdir=terraform init  # Corrected: Use -chdir option
 
       # Step 5: Run Terraform Plan
       - name: Run Terraform Plan
-        run: terraform plan ./terraform  # Specify the path to the terraform directory
+        run: terraform -chdir=terraform plan  # Corrected: Use -chdir option
 
       # Step 6: Run Terraform Apply
       - name: Run Terraform Apply
-        run: terraform apply -auto-approve ./terraform  # Specify the path to the terraform directory
+        run: terraform -chdir=terraform apply -auto-approve  # Corrected: Use -chdir option
 
       # Step 7: Output EC2 Public IP
       - name: Output EC2 Public IP
         run: |
-          PUBLIC_IP=$(terraform output -raw ec2_public_ip)
+          PUBLIC_IP=$(terraform -chdir=terraform output -raw ec2_public_ip)  # Corrected: Use -chdir option
           echo "EC2 Public IP: $PUBLIC_IP"
 
 
