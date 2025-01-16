@@ -20,7 +20,7 @@ resource "aws_security_group" "allow_http" {
 
 # EC2 instance resource definition
 resource "aws_instance" "web" {
-  ami           = "ami-07b69f62c1d38b012"  # Update with the correct AMI ID for your region
+  ami           = "ami-05576a079321f21f8"  # Update with the correct AMI ID for your region
   instance_type = "t2.micro"
   key_name      = "Jatinkeypair"  # Replace with your own EC2 key pair name
 
