@@ -39,6 +39,7 @@ jobs:
 
       - name: Output EC2 IP
         working-directory: ./terraform  # Ensure correct working directory
-        run: echo "EC2 Public IP: $(terraform output -raw ec2_public_ip)"
+        run: |
+          echo "EC2 Public IP: $(terraform output -raw ec2_public_ip)"
 
 
