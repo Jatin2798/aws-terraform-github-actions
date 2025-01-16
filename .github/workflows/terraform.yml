@@ -8,7 +8,7 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,16 +26,19 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
+        working-directory: ./terraform  # Specify the directory containing the Terraform files
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./terraform  # Specify the directory containing the Terraform files
         run: terraform plan
 
       - name: Terraform Apply
+        working-directory: ./terraform  # Specify the directory containing the Terraform files
         run: terraform apply -auto-approve
 
       - name: Output EC2 IP
-        run: |
-          echo "EC2 Public IP: $(terraform output -raw ec2_public_ip)"
+        working-directory: ./terraform  # Specify the directory containing the Terraform files
+        run: echo "EC2 Public IP: $(terraform output -raw ec2_public_ip)"
 
 
