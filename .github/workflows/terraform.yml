@@ -35,6 +35,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Output EC2 IP
-        run: echo "EC2 Public IP: $(terraform output -raw ec2_public_ip)"
+        run: |
+          echo "EC2 Public IP: $(terraform output -raw ec2_public_ip)"
 
 
