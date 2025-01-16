@@ -1,7 +1,7 @@
 resource "aws_instance" "web" {
-  ami           = "ami-07b69f62c1d38b012"  # Use the correct AMI for your region
+  ami           = "ami-05576a079321f21f8"  # Update with the correct AMI ID for your region
   instance_type = "t2.micro"
-  key_name      = "Jatinkeypair"  # Replace with your EC2 key pair name
+  key_name      = "webserverjenkinsKP"  # Make sure this matches your actual key pair name
 
   security_groups = [aws_security_group.allow_http.name]
 
