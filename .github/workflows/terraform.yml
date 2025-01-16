@@ -4,18 +4,18 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch:  # Allows you to manually trigger the workflow from GitHub Actions UI
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Step 2: Set up AWS credentials
+      # Set up AWS credentials
       - name: Set up AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -23,29 +23,52 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: 'us-east-1'
 
-      # Step 3: Install Terraform
+      # Install Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 'latest'
 
-      # Step 4: Initialize Terraform (use -chdir to specify directory)
+      # Initialize Terraform
       - name: Initialize Terraform
         run: terraform -chdir=terraform init
 
-      # Step 5: Run Terraform Plan
+      # Run Terraform Plan
       - name: Run Terraform Plan
         run: terraform -chdir=terraform plan
 
-      # Step 6: Run Terraform Apply
+      # Run Terraform Apply (Provision Resources)
       - name: Run Terraform Apply
         run: terraform -chdir=terraform apply -auto-approve
 
-      # Step 7: Output EC2 Public IP
-      - name: Output EC2 Public IP
-        run: |
-          PUBLIC_IP=$(terraform -chdir=terraform output -raw ec2_public_ip)
-          echo "EC2 Public IP: $PUBLIC_IP"
+  destroy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'  # Only run this job when manually triggered
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1'
+
+      # Install Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 'latest'
+
+      # Initialize Terraform
+      - name: Initialize Terraform
+        run: terraform -chdir=terraform init
+
+      # Run Terraform Destroy
+      - name: Run Terraform Destroy
+        run: terraform -chdir=terraform destroy -auto-approve
 
 
 
