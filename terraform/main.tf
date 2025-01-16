@@ -1,6 +1,6 @@
 # terraform/main.tf
-#providing inbound and outbound rules
 
+# Providing inbound and outbound rules
 resource "aws_security_group" "allow_http" {
   name        = "allow_http"
   description = "Allow HTTP traffic"
@@ -18,6 +18,7 @@ resource "aws_security_group" "allow_http" {
   }
 }
 
+# EC2 instance resource definition
 resource "aws_instance" "web" {
   ami           = "ami-07b69f62c1d38b012"  # Update with the correct AMI ID for your region
   instance_type = "t2.micro"
@@ -35,3 +36,4 @@ resource "aws_instance" "web" {
   sudo systemctl start httpd
   sudo systemctl enable httpd
   EOF
+}  # <-- Missing closing brace here
