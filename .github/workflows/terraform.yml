@@ -21,7 +21,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}   # Reference the AWS_REGION secret
+          aws-region: 'us-east-1'   # Reference the AWS_REGION secret
 
       # Step 3: Delete existing security group (if it exists)
       - name: Delete existing security group (if it exists)
