@@ -1,4 +1,5 @@
 # terraform/main.tf
+#providing inbound and outbound rules
 
 resource "aws_security_group" "allow_http" {
   name        = "allow_http"
